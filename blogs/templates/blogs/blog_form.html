@@ -1,0 +1,53 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<main class="formPage my-xl">
+    <div class="content-box">
+        <div class="formWrapper">
+            {% if blog in blogs %}
+            <a class="backButton" href="{% url 'blog' blog.id %}"><i class="im im-angle-left"></i></a>
+            {% else %}
+            <a class="backButton" href="{% url 'blogs' %}"><i class="im im-angle-left"></i></a>
+            {% endif %}
+            <br>
+
+            <form class="form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Input:Text -->
+                {% for field in form%}
+                <div class="form__field">
+                    <label for="formInput#text">{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+                
+                <table class="settings__table">
+                {% for tag in blog.tags.all %}
+                    <tr>
+                        
+                        <span class="tag tag--pill tag--sub tag--lg">
+                            <small>{{ tag }}</small>
+                            {% if request.user.is_authenticated %}
+                            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'delete_tag' tag.id %}?next={% url 'update_blog' blog.id %}"> <i class="im im-x-mark-circle-o"></i></a>
+                            {% endif %}
+                        </span>                     
+                        
+                    </tr>
+                {% endfor %}
+                </table>
+
+                                
+                <div class="form__field">
+                    <label for="formInput#text">Tags</label>
+                    <textarea name="new_tags " class="input" placeholder="Add tags here..."></textarea>
+
+                </div>
+
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
